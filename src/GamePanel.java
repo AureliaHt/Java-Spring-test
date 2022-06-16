@@ -13,11 +13,32 @@ import javax.swing.JPanel;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
-
+	// variables de classes, stockent des informations (width, height) sur l'objet. 
+	// static , keyword, permet de stocker une constante
+	static final int SCREEN_WIDTH = 600;
+	static final int SCREEN_HEIGHT = 600;
+	static final int UNIT_SIZE = 25;
+	static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE;
+	static final int DELAY = 75;
+	// coordinates for the body parts of the snake
+	final int x[] = new int[GAME_UNITS];
+	final int y[] = new int[GAME_UNITS];
+	// bodyParts of the snake at the beginning
+	int bodyParts = 6;
+	// applesEaten will start at 0
+	int applesEaten;
+	// coordinates of the apples who will appear randomly
+	int appleX;
+	int appleY;
+	// snake begin by going right
+	char direction = 'R';
+	boolean running = false;
+	Timer timer;
+	Random random;
+	
 	GamePanel(){
 		
 	}
-	
 	
 	public void startGame() {
 		
