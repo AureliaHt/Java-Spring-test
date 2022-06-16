@@ -43,10 +43,14 @@ public class GamePanel extends JPanel implements ActionListener {
 		this.setBackground(Color.black);
 		this.setFocusable(true);
 		this.addKeyListener(new MyKeyAdapter());
+		startGame();
 	}
 	
 	public void startGame() {
-		
+		newApple();
+		running = true;
+		timer = new Timer(DELAY, this);
+		timer.start();
 	}
 	// méthode qui définit où doit être placé le "painting code"
 	public void paintComponent(Graphics g) {
@@ -59,6 +63,10 @@ public class GamePanel extends JPanel implements ActionListener {
 	// méthode pour apporter du mouvement dans notre dessin
 	public void move() {
 		
+	}
+	
+	public void newApple() {
+	
 	}
 	
 	public void checkApple() {
