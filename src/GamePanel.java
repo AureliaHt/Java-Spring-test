@@ -117,10 +117,31 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 
 	public void checkCollisions() {
+		// check if the snake head collides with his body
 		for( int i=bodyParts ; i>0 ; i-- ) {
 			if((x[0] == x[i]) && (y[0] == y[i])) {
 				gameIsRunning = false;
 			}
+		}
+		// check if the snake head touches left border
+		if(x[0] < 0) {
+			gameIsRunning = false;
+		}
+		// check if the snake head touches right border
+		if(x[0] > SCREEN_WIDTH) {
+			gameIsRunning = false;
+		}
+		// check if the snake head touches top border
+		if(y[0] < 0) {
+			gameIsRunning = false;
+		}
+		// check if the snake head touches bottom border
+		if(x[0] > SCREEN_WIDTH) {
+			gameIsRunning = false;
+		}
+		// if snake collides against his body or a border, the timer stops
+		if(!gameIsRunning) {
+			timer.stop();
 		}
 	}
 
@@ -128,8 +149,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	}
 
-	// annotation override pour définir une méthode héritée de la classe parente.
-	// Override annotation to define
+	// annotation override pour définir une méthode héritée de la classe parente
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if(gameIsRunning) {
