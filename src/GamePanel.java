@@ -61,37 +61,41 @@ public class GamePanel extends JPanel implements ActionListener {
 		draw(g);
 	}
 
-	// draw method to draw points, lines... 
+	// draw method to draw points, lines...
 	// currently used to draw the red apples, the snake, and the grid
 	public void draw(Graphics g) {
-		for(int i=0; i<SCREEN_HEIGHT/UNIT_SIZE; i++) {
-			g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
-			g.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
-		}
-		g.setColor(Color.red);
-		g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
-		
-		for(int i=0 ; i<bodyParts ; i++ ) {
-			if(i==0) {
-				// head of the snake
-				g.setColor(Color.green);
-				g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-			} else {
-				// snake body
-				g.setColor(new Color(45,180,0));
-				g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+		if (gameIsRunning) {
+			for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
+				g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+				g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
 			}
+			g.setColor(Color.red);
+			g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+
+			for (int i = 0; i < bodyParts; i++) {
+				if (i == 0) {
+					// head of the snake
+					g.setColor(Color.green);
+					g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+				} else {
+					// snake body
+					g.setColor(new Color(45, 180, 0));
+					g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+				}
+			}
+		} else {
+			gameOver(g);
 		}
 	}
 
 	// method for moving the snake with keyboard (up, down, left, right)
 	public void move() {
-		for(int i = bodyParts ; i>0 ; i-- ) {
-			x[i] = x[i-1];
-			y[i] = y[i-1];
+		for (int i = bodyParts; i > 0; i--) {
+			x[i] = x[i - 1];
+			y[i] = y[i - 1];
 		}
-		
-		switch(direction) {
+
+		switch (direction) {
 		case 'U':
 			y[0] = y[0] - UNIT_SIZE;
 			break;
@@ -108,12 +112,12 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 
 	public void newApple() {
-		appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
-		appleY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
+		appleX = random.nextInt((int) (SCREEN_WIDTH / UNIT_SIZE)) * UNIT_SIZE;
+		appleY = random.nextInt((int) (SCREEN_HEIGHT / UNIT_SIZE)) * UNIT_SIZE;
 	}
 
 	public void checkApple() {
-		if((x[0] == appleX) && (y[0] == appleY)) {
+		if ((x[0] == appleX) && (y[0] == appleY)) {
 			bodyParts++;
 			applesEaten++;
 			newApple();
@@ -122,42 +126,46 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	public void checkCollisions() {
 		// check if the snake head collides with his body
-		for( int i=bodyParts ; i>0 ; i-- ) {
-			if((x[0] == x[i]) && (y[0] == y[i])) {
+		for (int i = bodyParts; i > 0; i--) {
+			if ((x[0] == x[i]) && (y[0] == y[i])) {
 				gameIsRunning = false;
 			}
 		}
 		// check if the snake head touches left border
-		if(x[0] < 0) {
+		if (x[0] < 0) {
 			gameIsRunning = false;
 		}
 		// check if the snake head touches right border
-		if(x[0] > SCREEN_WIDTH) {
+		if (x[0] > SCREEN_WIDTH) {
 			gameIsRunning = false;
 		}
 		// check if the snake head touches top border
-		if(y[0] < 0) {
+		if (y[0] < 0) {
 			gameIsRunning = false;
 		}
 		// check if the snake head touches bottom border
-		if(x[0] > SCREEN_WIDTH) {
+		if (x[0] > SCREEN_WIDTH) {
 			gameIsRunning = false;
 		}
 		// if snake collides against his body or a border, the timer stops
-		if(!gameIsRunning) {
+		if (!gameIsRunning) {
 			timer.stop();
 		}
 	}
 
 	public void gameOver(Graphics g) {
-
+		// implementing a game over text
+		g.setColor(Color.yellow);
+		g.setFont(new Font("Ink Free", Font.BOLD, 75));
+		FontMetrics metrics = getFontMetrics(g.getFont());
+		g.drawString("Game Over", (SCREEN_WIDTH - metrics.stringWidth("Game Over"))/2, SCREEN_HEIGHT/2);
 	}
 
 	// annotation override pour définir une méthode héritée de la classe parente.
 	// Override annotation to define
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if(gameIsRunning) {
+		if (gameIsRunning) {
 			move();
 			checkApple();
 			checkCollisions();
@@ -168,24 +176,24 @@ public class GamePanel extends JPanel implements ActionListener {
 	public class MyKeyAdapter extends KeyAdapter {
 		@Override
 		public void keyPressed(KeyEvent e) {
-			switch(e.getKeyCode()) {
+			switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
-				if(direction != 'R') {
+				if (direction != 'R') {
 					direction = 'L';
 				}
 				break;
 			case KeyEvent.VK_RIGHT:
-				if(direction != 'L') {
+				if (direction != 'L') {
 					direction = 'R';
 				}
 				break;
 			case KeyEvent.VK_UP:
-				if(direction != 'D') {
+				if (direction != 'D') {
 					direction = 'U';
 				}
 				break;
 			case KeyEvent.VK_DOWN:
-				if(direction != 'U') {
+				if (direction != 'U') {
 					direction = 'D';
 					break;
 				}
