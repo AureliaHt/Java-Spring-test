@@ -32,7 +32,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	int appleY;
 	// snake begin by going right
 	char direction = 'R';
-	boolean running = false;
+	boolean gameIsRunning = false;
 	Timer timer;
 	Random random;
 
@@ -49,7 +49,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	// method to initialize the game
 	public void startGame() {
 		newApple();
-		running = true;
+		gameIsRunning = true;
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
@@ -84,7 +84,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		}
 	}
 
-	// method for moving the snake
+	// method for moving the snake with keyboard (up, down, left, right)
 	public void move() {
 		for(int i = bodyParts ; i>0 ; i-- ) {
 			x[i] = x[i-1];
@@ -117,7 +117,11 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 
 	public void checkCollisions() {
-
+		for( int i=bodyParts ; i>0 ; i-- ) {
+			if((x[0] == x[i]) && (y[0] == y[i])) {
+				gameIsRunning = false;
+			}
+		}
 	}
 
 	public void gameOver(Graphics g) {
@@ -125,9 +129,15 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 
 	// annotation override pour définir une méthode héritée de la classe parente.
+	// Override annotation to define
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-
+		if(gameIsRunning) {
+			move();
+			checkApple();
+			checkCollisions();
+		}
+		repaint();
 	}
 
 	public class MyKeyAdapter extends KeyAdapter {
